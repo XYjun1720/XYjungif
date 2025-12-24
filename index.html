@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎬 GIF精灵图分割工具</title>
+    <!-- 引入字体图标 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 引入GIF.js库（必须） -->
+    <script src="https://cdn.jsdelivr.net/npm/gif.js@0.2.0/dist/gif.min.js"></script>
+    <!-- 引入我们的CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 标题 -->
+        <header class="header">
+            <h1><i class="fas fa-film"></i> GIF精灵图分割工具</h1>
+            <p class="subtitle">上传精灵表，自动分割生成GIF动画</p>
+        </header>
+
+        <!-- 上传区域 -->
+        <section class="card">
+            <h2><i class="fas fa-cloud-upload-alt"></i> 上传图片</h2>
+            <div class="upload-area" id="uploadArea">
+                <i class="fas fa-upload icon-large"></i>
+                <p class="upload-text">点击选择图片</p>
+                <p class="upload-hint">支持多选，每张生成独立GIF</p>
+                <input type="file" id="fileInput" accept="image/*" multiple>
+                <button class="upload-btn" id="uploadBtn">
+                    <i class="fas fa-folder-open"></i> 浏览文件
+                </button>
+            </div>
+        </section>
+
+        <!-- 图片列表 -->
+        <section class="card">
+            <h2><i class="fas fa-images"></i> 图片列表 <span id="imageCount">(0)</span></h2>
+            <div class="selection-bar">
+                <button class="btn-small" id="selectAll">全选</button>
+                <button class="btn-small" id="selectNone">取消</button>
+                <button class="btn-small" id="clearAll">清空</button>
+            </div>
+            <div class="image-list" id="imageList">
+                <div class="empty-message">
+                    <i class="fas fa-images"></i>
+                    <p>还没有上传任何图片</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 设置区域 -->
+        <section class="card">
+            <h2><i class="fas fa-sliders-h"></i> 生成设置</h2>
+            
+            <div class="setting">
+                <label>网格设置</label>
+                <div class="range-group">
+                    <div>
+                        <span>列数: <span id="colValue">4</span></span>
+                        <input type="range" id="cols" min="1" max="12" value="4">
+                    </div>
+                    <div>
+                        <span>行数: <span id="rowValue">4</span></span>
+                        <input type="range" id="rows" min="1" max="12" value="4">
+                    </div>
+                </div>
+            </div>
+
+            <div class="setting">
+                <label>动画设置</label>
+                <div class="range-group">
+                    <div>
+                        <span>帧率: <span id="fpsValue">10</span> FPS</span>
+                        <input type="range" id="fps" min="1" max="30" value="10">
+                    </div>
+                    <div>
+                        <span>质量: <span id="qualityValue">10</span></span>
+                        <input type="range" id="quality" min="1" max="20" value="10">
+                    </div>
+                </div>
+                <div class="checkbox-group">
+                    <label><input type="checkbox" id="loopCheckbox" checked> 循环播放</label>
+                    <label><input type="checkbox" id="transparentCheckbox"> 透明背景</label>
+                </div>
+            </div>
+        </section>
+
+        <!-- 预览区域 -->
+        <section class="card">
+            <h2><i class="fas fa-eye"></i> 网格预览</h2>
+            <div class="preview-container">
+                <canvas id="previewCanvas" width="400" height="300"></canvas>
+                <p class="preview-hint" id="previewHint">选择图片后显示网格预览</p>
+            </div>
+        </section>
+
+        <!-- 操作按钮 -->
+        <section class="card actions-section">
+            <h2><i class="fas fa-play-circle"></i> 生成操作</h2>
+            <div class="action-buttons">
+                <button class="btn-primary" id="generateSelected">
+                    <i class="fas fa-play"></i> 生成选中图片
+                </button>
+                <button class="btn-secondary" id="generateAll">
+                    <i class="fas fa-play-circle"></i> 生成全部图片
+                </button>
+            </div>
+            
+            <!-- 进度条 -->
+            <div class="progress-container" id="progressContainer" style="display: none;">
+                <div class="progress-header">
+                    <span id="progressText">准备生成...</span>
+                    <span id="progressPercent">0%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 结果区域 -->
+        <section class="card results-section" id="resultsSection" style="display: none;">
+            <h2><i class="fas fa-check-circle"></i> 生成结果 <span id="resultsCount">(0)</span></h2>
+            <div class="results-grid" id="resultsGrid">
+                <div class="empty-results">
+                    <i class="fas fa-film"></i>
+                    <p>生成的GIF将显示在这里</p>
+                </div>
+            </div>
+            <button class="btn-success batch-download" id="batchDownload" disabled>
+                <i class="fas fa-download"></i> 批量下载所有GIF
+            </button>
+        </section>
+
+        <!-- 底部信息 -->
+        <footer class="footer">
+            <p>🎯 提示：上传精灵图后，调整网格设置，点击生成按钮即可创建GIF动画</p>
+            <p class="version">v1.0 - 纯前端工具，无需上传服务器</p>
+        </footer>
+    </div>
+
+    <!-- 引入我们的JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
